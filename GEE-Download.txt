@@ -36,13 +36,7 @@ var tempTimeSeries = ui.Chart.image.seriesByRegion(
 }});
 print(tempTimeSeries);
 
---
-JACS
-+55 11 98045 1995
-
-Juliano Iowa <ju.iowa@gmail.com>
-Wed, Sep 4, 2019, 7:41 PM
-to me
+______________________________________________________________________________________________________________
 
 LANDSAT 7 & 8
 var regions = ee.FeatureCollection([
@@ -122,12 +116,7 @@ var tempTimeSeries8 = ui.Chart.image.seriesByRegion(
            // 3: {color: '0000F0'}  // P4
 }});
 print(tempTimeSeries8);
-
-
-Juliano Iowa <ju.iowa@gmail.com>
-Wed, Sep 4, 2019, 8:00 PM
-to me
-
+______________________________________________________________________________________________________________
 Using OLCI Images
 
 var regions = ee.FeatureCollection([
@@ -158,13 +147,8 @@ var tempTimeSeries = ui.Chart.image.seriesByRegion(
             0: {color: 'FF0000'}//, // P1});
 print(tempTimeSeries);
 
-
-Juliano Iowa <ju.iowa@gmail.com>
-Tue, Oct 8, 2019, 10:35 PM
-to me
-
 ####Downloading and plottin' GFS data
-______________________________________________________
+______________________________________________________________________________________________________________
 var regions = ee.FeatureCollection([
   ee.Feature(ee.Geometry.Point(-72.873933, -41.600893), {label: 'Alman'})//,
  // ee.Feature(ee.Geometry.Point(-72.512, -42.314), {label: 'Barents Sea'}),
@@ -189,12 +173,7 @@ var tempTimeSeries = ui.Chart.image.seriesByRegion(
             'Rains': {color: 'FF0000'}
 }});
 print(tempTimeSeries);
-
-
-Juliano Iowa <ju.iowa@gmail.com>
-Wed, Feb 19, 12:05 AM
-to me
-
+______________________________________________________________________________________________________________
 Working Code for GPM Data showing aggregating Hourly Data by day:
 
 // Seleciona algumas localizações e gera a serie temporal da temperatura do Oceano usando as imagens do Landsat 7 desde 2018
