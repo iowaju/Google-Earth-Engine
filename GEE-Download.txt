@@ -1,0 +1,220 @@
+// Seleciona algumas localizações e gera a serie temporal da temperatura do Oceano usando as imagens do Landsat 7 desde 2018
+
+var regions = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(32.056111000000001, 69.573333000000005), {label: 'Titovskaya guba'}),
+  ee.Feature(ee.Geometry.Point(33.172221999999998, 69.574444000000000), {label: 'Barents Sea'}),
+  ee.Feature(ee.Geometry.Point(33.843611000000003, 69.280000000000001), {label: 'guba Dolgaya-Zapadnaya'}),
+  ee.Feature(ee.Geometry.Point(33.728889000000002, 69.289721999999998), {label: 'guba Zelenetskaya-Zapadnaya'})
+]);
+var ROI = regions;
+
+var albedo = function(image){
+  var alb = image.expression("(B6/10)-273",{'B6': image.select('B6')});
+ 
+  return(image.addBands(alb.rename("albedo")));
+};
+
+var SST = ee.ImageCollection('LANDSAT/LE07/C01/T1_SR')
+    .filterDate('2018-01-01', '2019-09-01')
+    .select(['B6'])
+    .map(albedo);
+
+// Create a time series chart.
+var tempTimeSeries = ui.Chart.image.seriesByRegion(
+    SST, regions, ee.Reducer.mean(), 'albedo', 20, 'system:time_start', 'label')
+        .setChartType('ScatterChart')
+        .setOptions({
+          title: 'Reflectance from Band 6 - Temperature in K',
+          vAxis: {title: 'Temperature (Celsius)'},
+          lineWidth: 1,
+          pointSize: 0,
+          series: {
+            0: {color: 'FF0000'}, // P1
+            1: {color: '00FF00'}, // P2
+            2: {color: '0000FF'}, // P3
+            3: {color: '0000F0'}  // P4
+}});
+print(tempTimeSeries);
+
+--
+JACS
++55 11 98045 1995
+
+Juliano Iowa <ju.iowa@gmail.com>
+Wed, Sep 4, 2019, 7:41 PM
+to me
+
+LANDSAT 7 & 8
+var regions = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(-72.873933, -41.600893), {label: 'Alman'})//,
+ // ee.Feature(ee.Geometry.Point(-72.512, -42.314), {label: 'Barents Sea'}),
+ // ee.Feature(ee.Geometry.Point(-72.456, -42.181), {label: 'guba Dolgaya-Zapadnaya'}),
+ // ee.Feature(ee.Geometry.Point(-72.847, -43.024), {label: 'guba Zelenetskaya-Zapadnaya'})
+]);
+
+//-43.038 -72.862
+//-42.314 -72.512
+//-42.181 -72.456
+//-43.024 -72.847
+//-43.132 -72.913
+//-42.239 -72.447
+//-42.285 -72.465
+
+
+var albedo = function(image){
+  var alb = image.expression("(B6/10)-273",{'B6': image.select('B6')});
+ 
+  return(image.addBands(alb.rename("albedo")));
+};
+
+var SST = ee.ImageCollection('LANDSAT/LE07/C01/T1_SR')
+    .filterDate('2013-05-01', '2019-09-01')
+    .select(['B6'])
+    .map(albedo)
+    .filter(ee.Filter.lt('CLOUD_COVER',60))
+
+// Create a time series chart.
+var tempTimeSeries = ui.Chart.image.seriesByRegion(
+    SST, regions, ee.Reducer.mean(), 'albedo', 10, 'system:time_start', 'label')
+        .setChartType('ScatterChart')
+        .setOptions({
+          title: 'Reflectance from LANDSAT Band 6 - Temperature in Celsius',
+          vAxis: {title: 'Temperature (Celsius)'},
+          lineWidth: 1,
+          pointSize: 0,
+          series: {
+            0: {color: 'FF0000'}//, // P1
+          //  1: {color: '00FF00'}, // P2
+           // 2: {color: '0000FF'}, // P3
+           // 3: {color: '0000F0'}  // P4
+}});
+print(tempTimeSeries);
+
+//__________________________________________________________________________
+//__________________________________________________________________________
+//__________________________________________________________________________
+
+var albedo8 = function(image8){
+  var alb8 = image8.expression("B10 - 273",{'B10': image8.select('B10')});
+ 
+  return(image8.addBands(alb8.rename("albedo8")));
+};
+
+var SST8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+    .filterDate('2013-05-01', '2019-09-01')
+    .select(['B10'])
+    .map(albedo8)
+    .filter(ee.Filter.lt('CLOUD_COVER',60))
+
+// Create a time series chart.
+var tempTimeSeries8 = ui.Chart.image.seriesByRegion(
+    SST8, regions, ee.Reducer.mean(), 'albedo8', 10, 'system:time_start', 'label')
+        .setChartType('ScatterChart')
+        .setOptions({
+          title: 'Reflectance from LANDSAT 8 Band 10 - Temperature in Celsius',
+          vAxis: {title: 'Temperature (Celsius)'},
+          lineWidth: 1,
+          pointSize: 0,
+          series: {
+            0: {color: 'FF0000'}//, // P1
+          //  1: {color: '00FF00'}, // P2
+           // 2: {color: '0000FF'}, // P3
+           // 3: {color: '0000F0'}  // P4
+}});
+print(tempTimeSeries8);
+
+
+Juliano Iowa <ju.iowa@gmail.com>
+Wed, Sep 4, 2019, 8:00 PM
+to me
+
+Using OLCI Images
+
+var regions = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(-72.512, -42.314), {label: 'Barents Sea'})//
+]);
+
+var albedo = function(image){
+  var alb = image.expression("(band * 0.0133873)",{'band': image.select('Oa02_radiance')});
+ 
+  return(image.addBands(alb.rename("albedo")));
+};
+
+var SST = ee.ImageCollection('COPERNICUS/S3/OLCI')
+    .filterDate('2013-05-01', '2019-09-01')
+    .select(['Oa02_radiance'])
+    .map(albedo)
+
+// Create a time series chart.
+var tempTimeSeries = ui.Chart.image.seriesByRegion(
+    SST, regions, ee.Reducer.mean(), 'albedo', 10, 'system:time_start', 'label')
+        .setChartType('ScatterChart')
+        .setOptions({
+          title: 'Reflectance Sentinel 3 - OLCI, Band 2 -412.5nm/10nm ',
+          vAxis: {title: 'Yellow substance and detrital pigments (turbidity) (W m^-2 sr^-1 μm^-1)'},
+          lineWidth: 1,
+          pointSize: 0,
+          series: {
+            0: {color: 'FF0000'}//, // P1});
+print(tempTimeSeries);
+
+
+Juliano Iowa <ju.iowa@gmail.com>
+Tue, Oct 8, 2019, 10:35 PM
+to me
+
+####Downloading and plottin' GFS data
+______________________________________________________
+var regions = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(-72.873933, -41.600893), {label: 'Alman'})//,
+ // ee.Feature(ee.Geometry.Point(-72.512, -42.314), {label: 'Barents Sea'}),
+ // ee.Feature(ee.Geometry.Point(-72.456, -42.181), {label: 'guba Dolgaya-Zapadnaya'}),
+ // ee.Feature(ee.Geometry.Point(-72.847, -43.024), {label: 'guba Zelenetskaya-Zapadnaya'})
+]);
+
+var Rains = ee.ImageCollection('NASA/GPM_L3/IMERG_V06')
+    .filterDate('2019-01-01', '2019-09-01')
+    .select('precipitationCal');
+
+// Create a time series chart.
+var tempTimeSeries = ui.Chart.image.seriesByRegion(
+    Rains, regions, ee.Reducer.mean(), 0)
+        .setChartType('ScatterChart')
+        .setOptions({
+          title: 'Rainfall Data form GPM',
+          vAxis: {title: 'Rainfall (mm)'},
+          lineWidth: 1,
+          pointSize: 0,
+          series: {
+            'Rains': {color: 'FF0000'}
+}});
+print(tempTimeSeries);
+
+
+Juliano Iowa <ju.iowa@gmail.com>
+Wed, Feb 19, 12:05 AM
+to me
+
+Working Code for GPM Data showing aggregating Hourly Data by day:
+
+// Seleciona algumas localizações e gera a serie temporal da temperatura do Oceano usando as imagens do Landsat 7 desde 2018
+
+var regions = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(32.056111000000001, 69.573333000000005), {label: 'Titovskaya guba'})
+]);
+var ROI = regions;
+
+var dataset = ee.ImageCollection('NASA/GPM_L3/IMERG_V06')
+    .filterDate('2019-07-31', '2019-09-01')
+   
+var precipitation = dataset.select('HQprecipitation');
+
+   
+// Create a time series chart.
+var tempTimeSeries = ui.Chart.image.seriesByRegion(
+    precipitation, regions, ee.Reducer.sum(),0)
+        .setChartType('ScatterChart')
+        .setOptions({
+          title: 'Total hourly precipitation from GPM',
+          vAxis: {title: 'Rains (mm)'},
+          lineWidth: 1,
